@@ -141,8 +141,13 @@ function queryCoreReportingApi(profileId) {
 }
 
 function handleAdList(results) {
+    adMapper.fbAdList = new Array();
     console.log('handleAdList results:');
     console.dir(results);
+    for(ad in results.rows){
+        adMapper.fbAdList.push(results.rows[ad][0]);
+    }
+    console.log('fbAdList is: ' + adMapper.fbAdList);
 
 }
 
