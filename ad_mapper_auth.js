@@ -43,10 +43,12 @@ function handleAuthorized() {
     var authorizeButton = document.getElementById('authorize-button');
     var makeApiCallButton = document.getElementById('make-api-call-button');
     var adIdDiv = document.getElementById('ad-id-div');
+    var profileIdDiv = document.getElementById('profile-id-div');
 
     // Show the 'Get Visits' button and hide the 'Authorize' button
     makeApiCallButton.style.visibility = '';
     adIdDiv.style.visibility = '';
+    profileIdDiv.style.visibility = '';
     authorizeButton.style.visibility = 'hidden';
 
     // When the 'Get Visits' button is clicked, call the makeApiCall function

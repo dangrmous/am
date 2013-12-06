@@ -46,6 +46,13 @@ function queryWebproperties(accountId) {
 function handleWebproperties(results) {
   if (!results.code) {
     if (results && results.items && results.items.length) {
+        console.log ("results length is: " + results.items.length);
+
+
+            console.log('Result of web properties query: ');
+            console.dir(results);
+
+
 
       // Get the first Google Analytics account
       var firstAccountId = results.items[0].accountId;
@@ -78,6 +85,13 @@ function handleProfiles(results) {
   if (!results.code) {
     if (results && results.items && results.items.length) {
 
+        for(i = 0; i < results.items.length; i++){
+                    console.log('Result of web Views (Profiles) query: ' + results.items[i].id);
+                }
+
+
+        console.log('Result of profiles query: ' + results);
+
       // Get the first View (Profile) ID
       var firstProfileId = results.items[0].id;
 
@@ -93,14 +107,17 @@ function handleProfiles(results) {
 }
 
 function queryCoreReportingApi(profileId) {
+    console.log('profileId in queryCoreReportingApi ' + profileId);
     facebookAdId = $("#ad-id").val();
+    profile = $("#profile-id").val();
     adFilters = 'ga:medium==' + facebookAdId;
+    gaProfile = 'ga:' + profile;
     console.log('The FB campiagn is: ' + facebookAdId);
   console.log('Querying Core Reporting API.');
 
   // Use the Analytics Service Object to query the Core Reporting API
   gapi.client.analytics.data.ga.get({
-    'ids': 'ga:78697007',
+    'ids': gaProfile,
     'start-date': '2013-11-11',
     'end-date': '2013-12-12',
     'metrics': 'ga:pageviews',
@@ -122,7 +139,7 @@ function printResults(results) {
       createMap();
     console.log('View (Profile) Name: ', results.profileInfo.profileName);
       for (rownumber in results.rows){
-    console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
+    //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
           addMarkerToMap(results.rows[rownumber][0],results.rows[rownumber][1]);
 
       }
