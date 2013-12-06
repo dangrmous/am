@@ -44,15 +44,21 @@ function handleAuthorized() {
     var makeApiCallButton = document.getElementById('make-api-call-button');
     var adIdDiv = document.getElementById('ad-id-div');
     var profileIdDiv = document.getElementById('profile-id-div');
+    var adListDiv = document.getElementById('ad-list-div');
+    var getAdListButton = document.getElementById('get-ad-list');
 
     // Show the 'Get Visits' button and hide the 'Authorize' button
     makeApiCallButton.style.visibility = '';
     adIdDiv.style.visibility = '';
     profileIdDiv.style.visibility = '';
+    adListDiv.style.visibility = '';
+    getAdListButton.style.visibility = '';
     authorizeButton.style.visibility = 'hidden';
 
     // When the 'Get Visits' button is clicked, call the makeApiCall function
     makeApiCallButton.onclick = makeApiCall;
+    getAdListButton.onclick = queryForAds;
+
 }
 
 

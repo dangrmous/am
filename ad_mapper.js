@@ -97,7 +97,7 @@ function handleProfiles(results) {
             profile = $("#profile-id").val();
             adMapper.gaProfile = 'ga:' + profile;
 
-            queryForAds();
+
 
             // Step 3. Query the Core Reporting API
             queryCoreReportingApi(firstProfileId);
@@ -111,6 +111,10 @@ function handleProfiles(results) {
 }
 
 function queryForAds() {
+    facebookAdId = $("#ad-id").val();
+                adMapper.adFilters = 'ga:medium==' + facebookAdId;
+                profile = $("#profile-id").val();
+                adMapper.gaProfile = 'ga:' + profile;
     console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
     gapi.client.analytics.data.ga.get({
         'ids': adMapper.gaProfile,
@@ -146,6 +150,7 @@ function handleAdList(results) {
     console.dir(results);
     for(ad in results.rows){
         adMapper.fbAdList.push(results.rows[ad][0]);
+        $("#ad-list").append('<li>' + results.rows[ad][0] + '</li>');
     }
     console.log('fbAdList is: ' + adMapper.fbAdList);
 
