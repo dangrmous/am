@@ -6,13 +6,16 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var adMapper = {};
 
-
+adMapper.clientId = '801313133290-ub79e00uthqes3c5p3fkmr6cjlpo9c38.apps.googleusercontent.com';
+adMapper.apiKey = 'AIzaSyDHs3a906p2WBdQK_1W7dm6MVVzF409OZw';
+adMapper.scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 
 // This function is called after the Client Library has finished loading
 function handleClientLoad() {
     // 1. Set the API Key
-    gapi.client.setApiKey(apiKey);
+    gapi.client.setApiKey(adMapper.apiKey);
 
     // 2. Call the function that checks if the user is Authenticated. This is defined in the next section
     window.setTimeout(checkAuth, 1);
@@ -21,7 +24,7 @@ function handleClientLoad() {
 function checkAuth() {
     // Call the Google Accounts Service to determine the current user's auth status.
     // Pass the response to the handleAuthResult callback function
-    gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+    gapi.auth.authorize({client_id: adMapper.clientId, scope: adMapper.scopes, immediate: true}, handleAuthResult);
 }
 
 function handleAuthResult(authResult) {
@@ -63,7 +66,7 @@ function handleUnAuthorized() {
     var makeApiCallButton = document.getElementById('make-api-call-button');
 
     // Show the 'Authorize Button' and hide the 'Get Visits' button
-    makeApiCallButton.style.visibility = 'hidden';
+
     authorizeButton.style.visibility = '';
 
     // When the 'Authorize' button is clicked, call the handleAuthClick function
@@ -71,7 +74,7 @@ function handleUnAuthorized() {
 }
 
 function handleAuthClick(event) {
-    gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+    gapi.auth.authorize({client_id: adMapper.clientId, scope: adMapper.scopes, immediate: false}, handleAuthResult);
     return false;
 }
 

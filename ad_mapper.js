@@ -5,7 +5,9 @@
  * Time: 3:22 PM
  * To change this template use File | Settings | File Templates.
  */
-var adMapper = {};
+
+
+console.log ("API key in ad_mapper.js is: " + adMapper.apiKey);
 
 function queryForAds() {
     facebookAdId = $("#ad-id").val();
