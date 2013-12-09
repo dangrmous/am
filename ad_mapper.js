@@ -103,6 +103,7 @@ function createAdList(results) {
     console.log('createAdList results:');
     console.dir(results);
     for (ad in results.rows) {
+        adMapper.markers[results.rows[ad][0]] = [];
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
             + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
@@ -110,7 +111,6 @@ function createAdList(results) {
         $("#" + results.rows[ad][0]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
             adMapper.adNumber = this.id;
-            adMapper.markers[adMapper.adNumber] = new Array ();
             handleAdClick();
         });
 
@@ -198,12 +198,15 @@ function addMarkerToMap(latitude, longitude) {
         console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
 
         adMapper.markers[adMapper.adNumber].push(marker);
-        console.log("adMapper.markers[adMapper.adNumber is: ]" + adMapper.markers[adMapper.adNumber]);
+        console.log("adMapper.markers[adMapper.adNumber is: ]");
+        console.dir(adMapper.markers[adMapper.adNumber]);
     }
 }
 
 function removeMarker(adNumber) {
     console.log("removeMarker called with adNumber value: " + adNumber);
+    console.log("Value of adMapper.markers is: ");
+    console.dir(adMapper.markers);
     if (adMapper.markers[adNumber].length) {
         for (var i = 0; i < adMapper.markers[adNumber].length; i++) {
 
