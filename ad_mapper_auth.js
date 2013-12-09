@@ -57,7 +57,6 @@ function handleAuthorized() {
     authorizeButton.style.visibility = 'hidden';
 
     // When the 'Get Visits' button is clicked, call the makeApiCall function
-    makeApiCallButton.onclick = makeApiCall;
     getAdListButton.onclick = queryForAds;
 
 }
