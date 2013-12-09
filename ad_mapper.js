@@ -50,7 +50,7 @@ function createAdList(results) {
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
             + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
-        $("#" + results.rows[ad][0]).click(getAdViewLocations(results.rows[ad][0]));
+        $("#" + results.rows[ad][0]).click(function(){getAdViewLocations(results.rows[ad][0])});
 
     }
     console.log('fbAdList is: ' + adMapper.fbAdList);
