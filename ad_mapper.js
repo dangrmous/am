@@ -7,11 +7,82 @@
  */
 
 
-console.log ("API key in ad_mapper.js is: " + adMapper.apiKey);
+function makeApiCall() {
+    queryAccounts();
+}
+
+function queryAccounts() {
+    console.log('Querying Accounts.');
+
+    // Get a list of all Google Analytics accounts for this user
+    gapi.client.analytics.management.accounts.list().execute(handleAccounts);
+}
+
+function handleAccounts(results) {
+    if (!results.code) {
+        if (results && results.items && results.items.length) {
+
+            // Get the first Google Analytics account
+            var firstAccountId = results.items[0].id;
+
+            // Query for Web Properties
+            queryWebproperties(firstAccountId);
+
+        } else {
+            console.log('No accounts found for this user.')
+        }
+    } else {
+        console.log('There was an error querying accounts: ' + results.message);
+    }
+}
+
+function queryWebproperties(accountId) {
+    console.log('Querying Webproperties.');
+
+    // Get a list of all the Web Properties for the account
+    gapi.client.analytics.management.webproperties.list({'accountId': accountId}).execute(handleWebproperties);
+}
+
+function handleWebproperties(results) {
+    if (!results.code) {
+        if (results && results.items && results.items.length) {
+            console.log("results length is: " + results.items.length);
+
+
+            console.log('Result of web properties query: ');
+            console.dir(results);
+
+
+            // Get the first Google Analytics account
+            var firstAccountId = results.items[0].accountId;
+
+            // Get the first Web Property ID
+            var firstWebpropertyId = results.items[0].id;
+
+            // Query for Views (Profiles)
+            queryProfiles(firstAccountId, firstWebpropertyId);
+
+        } else {
+            console.log('No webproperties found for this user.');
+        }
+    } else {
+        console.log('There was an error querying webproperties: ' + results.message);
+    }
+}
+
+function queryProfiles(accountId, webpropertyId) {
+    console.log('Querying Views (Profiles).');
+
+    // Get a list of all Views (Profiles) for the first Web Property of the first Account
+    gapi.client.analytics.management.profiles.list({
+        'accountId': accountId,
+        'webPropertyId': webpropertyId
+    }).execute(getAdViewLocations(adMapper.gaProfile));
+}
 
 function queryForAds() {
     facebookAdId = $("#ad-id").val();
-                adMapper.adFilters = 'ga:medium==' + facebookAdId;
+
                 profile = $("#profile-id").val();
                 adMapper.gaProfile = 'ga:' + profile;
     console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
@@ -35,7 +106,7 @@ function getAdViewLocations(profileId) {
 
     // Use the Analytics Service Object to query the Core Reporting API
     gapi.client.analytics.data.ga.get({
-        'ids': 'ga:' + profileId,
+        'ids': profileId,
         'start-date': '2013-11-11',
         'end-date': '2013-12-12',
         'metrics': 'ga:pageviews',
@@ -52,7 +123,9 @@ function createAdList(results) {
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
             + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
-        $("#" + results.rows[ad][0]).click(function(){getAdViewLocations(results.rows[ad][0])});
+        $("#" + results.rows[ad][0]).click(function(){
+            adMapper.adFilters = 'ga:medium==' + results.rows[ad][0];
+            makeApiCall()});
 
     }
     console.log('fbAdList is: ' + adMapper.fbAdList);
