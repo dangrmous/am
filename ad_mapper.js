@@ -98,6 +98,40 @@ function queryForAds() {
 }
 
 
+function createAdList(results) {
+    adMapper.fbAdList = new Array();
+    console.log('createAdList results:');
+    console.dir(results);
+    for (ad in results.rows) {
+        adMapper.fbAdList.push(results.rows[ad][0]);
+        $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
+            + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
+
+        $("#" + results.rows[ad][0]).click(function () {
+            adMapper.adFilters = 'ga:medium==' + this.id;
+            adMapper.adNumber = this.id;
+            adMapper.markers[adMapper.adNumber] = new Array ();
+            handleAdClick();
+        });
+
+        console.log (adMapper.markers[adMapper.adNumber]);
+
+    }
+
+    console.log('fbAdList is: ' + adMapper.fbAdList);
+
+}
+
+function handleAdClick() {
+    if ($("input#" + adMapper.adNumber + ":checked").val()) {
+        makeApiCall();
+    }
+
+    else {
+        removeMarker(adMapper.adNumber);
+    }
+}
+
 function getAdViewLocations(profileId) {
     console.log("getAdViewLocations called");
     console.log("adMapper.adFilters is: " + adMapper.adFilters);
@@ -117,27 +151,6 @@ function getAdViewLocations(profileId) {
     }).execute(handleCoreReportingResults);
 }
 
-function createAdList(results) {
-    adMapper.fbAdList = new Array();
-    console.log('createAdList results:');
-    console.dir(results);
-    for (ad in results.rows) {
-        adMapper.fbAdList.push(results.rows[ad][0]);
-        $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
-            + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
-
-        $("#" + results.rows[ad][0]).click(function () {
-            adMapper.adFilters = 'ga:medium==' + this.id;
-            makeApiCall()
-        });
-
-    }
-    $("#main").append('<button id="removeMarkers">Remove ad markers</button>');
-    $("#removeMarkers").click(function(){removeAllMarkers()});
-    console.log('fbAdList is: ' + adMapper.fbAdList);
-
-}
-
 function handleCoreReportingResults(results) {
     if (results.error) {
         console.log('There was an error querying core reporting API: ' + results.message);
@@ -148,7 +161,7 @@ function handleCoreReportingResults(results) {
 
 function printResults(results) {
     if (results.rows && results.rows.length) {
-
+        console.dir(results);
         console.log('View (Profile) Name: ', results.profileInfo.profileName);
         for (rownumber in results.rows) {
             //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
@@ -173,6 +186,7 @@ function createMap() {
 }
 
 function addMarkerToMap(latitude, longitude) {
+    console.log("addMarkerToMap called");
     //if ((latitude != 0) && (longitude != 0))
     {
         var latlng = new google.maps.LatLng(latitude, longitude);
@@ -181,15 +195,21 @@ function addMarkerToMap(latitude, longitude) {
             position: latlng
         }
         var marker = new google.maps.Marker(opts);
-        adMapper.markers.push(marker);
+        console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
+
+        adMapper.markers[adMapper.adNumber].push(marker);
+        console.log("adMapper.markers[adMapper.adNumber is: ]" + adMapper.markers[adMapper.adNumber]);
     }
 }
 
-function removeAllMarkers() {
-    if (adMapper.markers.length) {
-        for (var i = 0; i < adMapper.markers.length; i++) {
-            adMapper.markers[i].setMap(null);
+function removeMarker(adNumber) {
+    console.log("removeMarker called with adNumber value: " + adNumber);
+    if (adMapper.markers[adNumber].length) {
+        for (var i = 0; i < adMapper.markers[adNumber].length; i++) {
+
+            adMapper.markers[adNumber][i].setMap(null);
         }
-        adMapper.markers = [];
+
     }
+    adMapper.markers[adNumber] = [];
 }
