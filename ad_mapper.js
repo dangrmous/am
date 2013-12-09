@@ -25,6 +25,7 @@ function queryForAds() {
 
 
 function getAdViewLocations(profileId) {
+    console.log ("getAdViewLocations called");
     console.log('profileId in getAdViewLocations ' + profileId);
 
 

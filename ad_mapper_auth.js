@@ -7,9 +7,7 @@
  */
 
 
-var clientId = '801313133290-ub79e00uthqes3c5p3fkmr6cjlpo9c38.apps.googleusercontent.com';
-var apiKey = 'AIzaSyDHs3a906p2WBdQK_1W7dm6MVVzF409OZw';
-var scopes = 'https://www.googleapis.com/auth/analytics.readonly';
+
 
 // This function is called after the Client Library has finished loading
 function handleClientLoad() {
@@ -42,15 +40,12 @@ function handleAuthResult(authResult) {
 // Authorized user
 function handleAuthorized() {
     var authorizeButton = document.getElementById('authorize-button');
-    var makeApiCallButton = document.getElementById('make-api-call-button');
     var adIdDiv = document.getElementById('ad-id-div');
     var profileIdDiv = document.getElementById('profile-id-div');
     var adListDiv = document.getElementById('ad-list-div');
     var getAdListButton = document.getElementById('get-ad-list');
 
-    // Show the 'Get Visits' button and hide the 'Authorize' button
-    makeApiCallButton.style.visibility = '';
-    adIdDiv.style.visibility = '';
+    // Show the 'Get Visits' button and hide the 'Authorize' button;
     profileIdDiv.style.visibility = '';
     adListDiv.style.visibility = '';
     getAdListButton.style.visibility = '';
