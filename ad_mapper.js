@@ -83,8 +83,8 @@ function queryProfiles(accountId, webpropertyId) {
 function queryForAds() {
     facebookAdId = $("#ad-id").val();
 
-                profile = $("#profile-id").val();
-                adMapper.gaProfile = 'ga:' + profile;
+    profile = $("#profile-id").val();
+    adMapper.gaProfile = 'ga:' + profile;
     console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
     gapi.client.analytics.data.ga.get({
         'ids': adMapper.gaProfile,
@@ -98,7 +98,8 @@ function queryForAds() {
 
 
 function getAdViewLocations(profileId) {
-    console.log ("getAdViewLocations called");
+    console.log("getAdViewLocations called");
+    console.log("adMapper.adFilters is: " + adMapper.adFilters);
     console.log('profileId in getAdViewLocations ' + profileId);
 
 
@@ -119,13 +120,15 @@ function createAdList(results) {
     adMapper.fbAdList = new Array();
     console.log('createAdList results:');
     console.dir(results);
-    for(ad in results.rows){
+    for (ad in results.rows) {
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
             + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
-        $("#" + results.rows[ad][0]).click(function(){
-            adMapper.adFilters = 'ga:medium==' + results.rows[ad][0];
-            makeApiCall()});
+
+        $("#" + results.rows[ad][0]).click(function () {
+            adMapper.adFilters = 'ga:medium==' + this.id;
+            makeApiCall()
+        });
 
     }
     console.log('fbAdList is: ' + adMapper.fbAdList);
