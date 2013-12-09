@@ -30,6 +30,7 @@ function handleAuthResult(authResult) {
     if (authResult) {
         // The user has authorized access
         // Load the Analytics Client. This function is defined in the next section.
+        createMap();
         loadAnalyticsClient();
     } else {
         // User has not Authenticated and Authorized

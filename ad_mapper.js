@@ -9,6 +9,8 @@ var adMapper = {};
 
 function makeApiCall() {
     queryAccounts();
+
+
 }
 
 function queryAccounts() {
@@ -100,7 +102,7 @@ function handleProfiles(results) {
 
 
             // Step 3. Query the Core Reporting API
-            queryCoreReportingApi(firstProfileId);
+            queryCoreReportingApi(adMapper.gaProfile);
 
         } else {
             console.log('No views (profiles) found for this user.');
@@ -135,7 +137,7 @@ function queryCoreReportingApi(profileId) {
 
     // Use the Analytics Service Object to query the Core Reporting API
     gapi.client.analytics.data.ga.get({
-        'ids': adMapper.gaProfile,
+        'ids': 'ga:' + profileId,
         'start-date': '2013-11-11',
         'end-date': '2013-12-12',
         'metrics': 'ga:pageviews',
@@ -150,7 +152,10 @@ function handleAdList(results) {
     console.dir(results);
     for(ad in results.rows){
         adMapper.fbAdList.push(results.rows[ad][0]);
-        $("#ad-list").append('<li>' + results.rows[ad][0] + '</li>');
+        $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
+            + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
+        $("#" + results.rows[ad][0]).click(queryCoreReportingApi(results.rows[ad][0]));
+
     }
     console.log('fbAdList is: ' + adMapper.fbAdList);
 
@@ -166,15 +171,14 @@ function handleCoreReportingResults(results) {
 
 function printResults(results) {
     if (results.rows && results.rows.length) {
-        createMap();
+        //createMap();
         console.log('View (Profile) Name: ', results.profileInfo.profileName);
         for (rownumber in results.rows) {
             //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
             addMarkerToMap(results.rows[rownumber][0], results.rows[rownumber][1]);
 
         }
-        $("#main").hide();
-        $("#map_canvas").show();
+
     } else {
         console.log('No results found');
     }
@@ -183,7 +187,7 @@ function printResults(results) {
 function createMap() {
     var latlng = new google.maps.LatLng(39.114221, -94.626805);
     var mapOpts = {
-        zoom: 5,
+        zoom: 4,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
