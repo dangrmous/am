@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+adMapper.markers = [];
 
 function makeApiCall() {
     queryAccounts();
@@ -131,6 +132,8 @@ function createAdList(results) {
         });
 
     }
+    $("#main").append('<button id="removeMarkers">Remove ad markers</button>');
+    $("#removeMarkers").click(function(){removeAllMarkers()});
     console.log('fbAdList is: ' + adMapper.fbAdList);
 
 }
@@ -145,7 +148,7 @@ function handleCoreReportingResults(results) {
 
 function printResults(results) {
     if (results.rows && results.rows.length) {
-        //createMap();
+
         console.log('View (Profile) Name: ', results.profileInfo.profileName);
         for (rownumber in results.rows) {
             //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
@@ -178,5 +181,15 @@ function addMarkerToMap(latitude, longitude) {
             position: latlng
         }
         var marker = new google.maps.Marker(opts);
+        adMapper.markers.push(marker);
+    }
+}
+
+function removeAllMarkers() {
+    if (adMapper.markers.length) {
+        for (var i = 0; i < adMapper.markers.length; i++) {
+            adMapper.markers[i].setMap(null);
+        }
+        adMapper.markers = [];
     }
 }
