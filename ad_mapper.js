@@ -12,6 +12,8 @@ adMapper.markerAdded = new Array();
 
 var currentDate = new Date();
 
+currentDate.formatted = currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate();
+console.log("currentDate.formatted = " + currentDate.formatted);
 
 function makeApiCall() {
     queryAccounts();
@@ -95,7 +97,7 @@ function queryForAds() {
     gapi.client.analytics.data.ga.get({
         'ids': adMapper.gaProfile,
         'start-date': '2013-11-11',
-        'end-date': '2013-12-12',
+        'end-date': currentDate.formatted,
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:medium',
         'filters': 'ga:medium=~[0-9]'
@@ -162,7 +164,7 @@ function getAdViewLocations(profileId) {
     gapi.client.analytics.data.ga.get({
         'ids': profileId,
         'start-date': '2013-11-11',
-        'end-date': '2013-12-12',
+        'end-date': currentDate.formatted,
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:latitude,ga:longitude',
         'filters': adMapper.adFilters
