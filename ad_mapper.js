@@ -7,6 +7,7 @@
  */
 
 adMapper.markers = [];
+adMapper.colors = [];
 
 
 function makeApiCall() {
@@ -106,11 +107,12 @@ function createAdList(results) {
     console.log('createAdList results:');
     console.dir(results);
     for (ad in results.rows) {
+        adMapper.colors[results.rows[ad][0]] = getAColor(ad);
         adMapper.markers[results.rows[ad][0]] = [];
         adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
-            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.markers[results.rows[ad][0]].color +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
+            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.colors[results.rows[ad][0]] +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
 
         $("#" + results.rows[ad][0]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
@@ -207,7 +209,7 @@ function addMarkerToMap(latitude, longitude) {
             map: adMapper.map,
             position: latlng,
             icon : { path: google.maps.SymbolPath.CIRCLE,
-                fillColor: adMapper.markers[adMapper.adNumber].color,
+                fillColor: adMapper.colors[adMapper.adNumber],
                 fillOpacity: 1,
                 strokeColor: "grey",
                 strokeOpacity: 1,
