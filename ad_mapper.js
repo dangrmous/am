@@ -208,11 +208,11 @@ function addMarkerToMap(latitude, longitude) {
             position: latlng,
             icon : { path: google.maps.SymbolPath.CIRCLE,
                 fillColor: adMapper.markers[adMapper.adNumber].color,
-                fillOpacity: 0.5,
+                fillOpacity: 1,
                 strokeColor: adMapper.markers[adMapper.adNumber].color,
-                strokeOpacity: 0.5,
+                strokeOpacity: 1,
                 strokeWeight: 1,
-                scale: 5
+                scale: 3
             }
         }
         var marker = new google.maps.Marker(opts);
