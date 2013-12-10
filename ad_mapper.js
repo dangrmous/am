@@ -6,8 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-adMapper.markers = [];
+adMapper.markers = []; //Array of known Ad Id's, each with an array of markers (if any)
 adMapper.colors = [];
+adMapper.markerAdded = new Array();
+
+var currentDate = new Date();
 
 
 function makeApiCall() {
@@ -101,6 +104,7 @@ function queryForAds() {
 
 
 function createAdList(results) {
+    removeAllMarkers();
     $("#ad-list").empty();
     $("span#adListLabel").css("visibility", "");
     adMapper.fbAdList = new Array();
@@ -109,7 +113,7 @@ function createAdList(results) {
     for (ad in results.rows) {
         adMapper.colors[results.rows[ad][0]] = getAColor(ad);
         adMapper.markers[results.rows[ad][0]] = [];
-        adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
+        //adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
             + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.colors[results.rows[ad][0]] +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
@@ -221,6 +225,7 @@ function addMarkerToMap(latitude, longitude) {
         console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
 
         adMapper.markers[adMapper.adNumber].push(marker);
+        adMapper.markerAdded.push(adMapper.adNumber);
         console.log("adMapper.markers[adMapper.adNumber is: ]");
         console.dir(adMapper.markers[adMapper.adNumber]);
     }
@@ -238,4 +243,14 @@ function removeMarker(adNumber) {
 
     }
     adMapper.markers[adNumber] = [];
+}
+
+function removeAllMarkers(){
+    console.log("removeAllMarkers called. adMapper.markerAdded is: ");
+    console.dir(adMapper.markerAdded);
+    for (i=0; i < adMapper.markerAdded.length; i++){
+
+            removeMarker(adMapper.markerAdded[i]);
+
+    }
 }
