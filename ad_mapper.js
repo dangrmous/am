@@ -13,14 +13,14 @@ adMapper.markerAdded = new Array();
 var currentDate = new Date();
 
 currentDate.formatted = currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate();
-console.log("currentDate.formatted = " + currentDate.formatted);
+//console.log("currentDate.formatted = " + currentDate.formatted);
 
 function makeApiCall() {
     queryAccounts();
 }
 
 function queryAccounts() {
-    console.log('Querying Accounts.');
+    //console.log('Querying Accounts.');
 
     // Get a list of all Google Analytics accounts for this user
     gapi.client.analytics.management.accounts.list().execute(handleAccounts);
@@ -37,15 +37,15 @@ function handleAccounts(results) {
             queryWebproperties(firstAccountId);
 
         } else {
-            console.log('No accounts found for this user.')
+            //console.log('No accounts found for this user.')
         }
     } else {
-        console.log('There was an error querying accounts: ' + results.message);
+        //console.log('There was an error querying accounts: ' + results.message);
     }
 }
 
 function queryWebproperties(accountId) {
-    console.log('Querying Webproperties.');
+    //console.log('Querying Webproperties.');
 
     // Get a list of all the Web Properties for the account
     gapi.client.analytics.management.webproperties.list({'accountId': accountId}).execute(handleWebproperties);
@@ -54,11 +54,11 @@ function queryWebproperties(accountId) {
 function handleWebproperties(results) {
     if (!results.code) {
         if (results && results.items && results.items.length) {
-            console.log("results length is: " + results.items.length);
+            //console.log("results length is: " + results.items.length);
 
 
-            console.log('Result of web properties query: ');
-            console.dir(results);
+            //console.log('Result of web properties query: ');
+            //console.dir(results);
 
 
             // Get the first Google Analytics account
@@ -71,15 +71,15 @@ function handleWebproperties(results) {
             queryProfiles(firstAccountId, firstWebpropertyId);
 
         } else {
-            console.log('No webproperties found for this user.');
+            //console.log('No webproperties found for this user.');
         }
     } else {
-        console.log('There was an error querying webproperties: ' + results.message);
+        //console.log('There was an error querying webproperties: ' + results.message);
     }
 }
 
 function queryProfiles(accountId, webpropertyId) {
-    console.log('Querying Views (Profiles).');
+    //console.log('Querying Views (Profiles).');
 
     // Get a list of all Views (Profiles) for the first Web Property of the first Account
     gapi.client.analytics.management.profiles.list({
@@ -93,7 +93,7 @@ function queryForAds() {
 
     profile = $("#profile-id").val();
     adMapper.gaProfile = 'ga:' + profile;
-    console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
+    //console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
     gapi.client.analytics.data.ga.get({
         'ids': adMapper.gaProfile,
         'start-date': '2013-11-11',
@@ -110,8 +110,8 @@ function createAdList(results) {
     $("#ad-list").empty();
     $("span#adListLabel").css("visibility", "");
     adMapper.fbAdList = new Array();
-    console.log('createAdList results:');
-    console.dir(results);
+    //console.log('createAdList results:');
+    //console.dir(results);
     for (ad in results.rows) {
         adMapper.colors[results.rows[ad][0]] = getAColor(ad);
         adMapper.markers[results.rows[ad][0]] = [];
@@ -128,7 +128,7 @@ function createAdList(results) {
 
     }
 
-    console.log('fbAdList is: ' + adMapper.fbAdList);
+    //console.log('fbAdList is: ' + adMapper.fbAdList);
 
 }
 
@@ -137,7 +137,7 @@ function getAColor(index){
     h = 15 * index;
     var hslColor = new String;
     hslColor = "hsl(" + h + ",100%,50%)";
-    console.log("Index was: " + index + " and color string is: " + hslColor);
+    //console.log("Index was: " + index + " and color string is: " + hslColor);
     return hslColor;
 
 }
@@ -153,12 +153,14 @@ function handleAdClick() {
 }
 
 function getAdViewLocations(profileId) {
-    console.log("getAdViewLocations called");
-    console.log("adMapper.adFilters is: " + adMapper.adFilters);
-    console.log('profileId in getAdViewLocations ' + profileId);
+    //console.log("getAdViewLocations called");
+    //console.log("adMapper.adFilters is: " + adMapper.adFilters);
+    //console.log('profileId in getAdViewLocations ' + profileId);
 
 
-    console.log('Querying Core Reporting API.');
+    console.log('Querying Core Reporting API. Profile ID is: ' + profileId);
+    console.log('adMapper.adFilters is: ');
+    console.dir (adMapper.adFilters);
 
     // Use the Analytics Service Object to query the Core Reporting API
     gapi.client.analytics.data.ga.get({
@@ -181,8 +183,8 @@ function handleCoreReportingResults(results) {
 
 function printResults(results) {
     if (results.rows && results.rows.length) {
-        console.dir(results);
-        console.log('View (Profile) Name: ', results.profileInfo.profileName);
+        //console.dir(results);
+        //console.log('View (Profile) Name: ', results.profileInfo.profileName);
         for (rownumber in results.rows) {
             //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
             addMarkerToMap(results.rows[rownumber][0], results.rows[rownumber][1]);
@@ -206,7 +208,7 @@ function createMap() {
 }
 
 function addMarkerToMap(latitude, longitude) {
-    console.log("addMarkerToMap called");
+    //console.log("addMarkerToMap called");
     //if ((latitude != 0) && (longitude != 0))
     {
         var latlng = new google.maps.LatLng(latitude, longitude);
@@ -224,19 +226,19 @@ function addMarkerToMap(latitude, longitude) {
             }
         }
         var marker = new google.maps.Marker(opts);
-        console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
+        //console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
 
         adMapper.markers[adMapper.adNumber].push(marker);
         adMapper.markerAdded.push(adMapper.adNumber);
-        console.log("adMapper.markers[adMapper.adNumber is: ]");
-        console.dir(adMapper.markers[adMapper.adNumber]);
+        //console.log("adMapper.markers[adMapper.adNumber is: ]");
+        //console.dir(adMapper.markers[adMapper.adNumber]);
     }
 }
 
 function removeMarker(adNumber) {
-    console.log("removeMarker called with adNumber value: " + adNumber);
-    console.log("Value of adMapper.markers is: ");
-    console.dir(adMapper.markers);
+    //console.log("removeMarker called with adNumber value: " + adNumber);
+    //console.log("Value of adMapper.markers is: ");
+    //console.dir(adMapper.markers);
     if (adMapper.markers[adNumber].length) {
         for (var i = 0; i < adMapper.markers[adNumber].length; i++) {
 
@@ -248,8 +250,8 @@ function removeMarker(adNumber) {
 }
 
 function removeAllMarkers(){
-    console.log("removeAllMarkers called. adMapper.markerAdded is: ");
-    console.dir(adMapper.markerAdded);
+    //console.log("removeAllMarkers called. adMapper.markerAdded is: ");
+    //console.dir(adMapper.markerAdded);
     for (i=0; i < adMapper.markerAdded.length; i++){
 
             removeMarker(adMapper.markerAdded[i]);
