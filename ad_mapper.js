@@ -85,7 +85,25 @@ function queryProfiles(accountId, webpropertyId) {
     gapi.client.analytics.management.profiles.list({
         'accountId': accountId,
         'webPropertyId': webpropertyId
-    }).execute(getAdViewLocations(adMapper.gaProfile));
+    }).execute(handleProfiles);
+}
+
+function handleProfiles(results) {
+  if (!results.code) {
+    if (results && results.items && results.items.length) {
+
+      // Get the first View (Profile) ID
+      var firstProfileId = results.items[0].id;
+
+      // Step 3. Query the Core Reporting API
+        getAdViewLocations(adMapper.gaProfile);
+
+    } else {
+      console.log('No views (profiles) found for this user.');
+    }
+  } else {
+    console.log('There was an error querying views (profiles): ' + results.message);
+  }
 }
 
 function queryForAds() {
@@ -158,9 +176,9 @@ function getAdViewLocations(profileId) {
     //console.log('profileId in getAdViewLocations ' + profileId);
 
 
-    console.log('Querying Core Reporting API. Profile ID is: ' + profileId);
-    console.log('adMapper.adFilters is: ');
-    console.dir (adMapper.adFilters);
+    //console.log('Querying Core Reporting API. Profile ID is: ' + profileId);
+    //console.log('adMapper.adFilters is: ');
+    //console.dir (adMapper.adFilters);
 
     // Use the Analytics Service Object to query the Core Reporting API
     gapi.client.analytics.data.ga.get({

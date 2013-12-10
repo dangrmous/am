@@ -15,6 +15,7 @@ adMapper.scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 
 // This function is called after the Client Library has finished loading
 function handleClientLoad() {
+
     // 1. Set the API Key
     gapi.client.setApiKey(adMapper.apiKey);
 
