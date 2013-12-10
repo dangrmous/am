@@ -209,9 +209,9 @@ function addMarkerToMap(latitude, longitude) {
             icon : { path: google.maps.SymbolPath.CIRCLE,
                 fillColor: adMapper.markers[adMapper.adNumber].color,
                 fillOpacity: 1,
-                strokeColor: adMapper.markers[adMapper.adNumber].color,
+                strokeColor: "grey",
                 strokeOpacity: 1,
-                strokeWeight: 1,
+                strokeWeight: 2,
                 scale: 3
             }
         }
