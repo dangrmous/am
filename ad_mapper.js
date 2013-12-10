@@ -100,6 +100,7 @@ function queryForAds() {
 
 
 function createAdList(results) {
+    $("#ad-list").empty();
     $("span#adListLabel").css("visibility", "");
     adMapper.fbAdList = new Array();
     console.log('createAdList results:');
@@ -109,15 +110,13 @@ function createAdList(results) {
         adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
-            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: #' + adMapper.markers[results.rows[ad][0]].color +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
+            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.markers[results.rows[ad][0]].color +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
 
         $("#" + results.rows[ad][0]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
             adMapper.adNumber = this.id;
             handleAdClick();
         });
-
-        console.log (adMapper.markers[adMapper.adNumber]);
 
     }
 
@@ -127,13 +126,11 @@ function createAdList(results) {
 
 function getAColor(index){
     //Returns a hex color value starting at #D2D2FF and getting more saturated based on index
-    r = 230 - (25 * index);
-    g = 230 - (25 * index);
-    b = 255;
-    var hexColor = new String;
-    hexColor = r.toString(16) + g.toString(16) + b.toString(16);
-    console.log("Index was: " + index + " and color string is: " + hexColor);
-    return hexColor;
+    h = 15 * index;
+    var hslColor = new String;
+    hslColor = "hsl(" + h + ",100%,50%)";
+    console.log("Index was: " + index + " and color string is: " + hslColor);
+    return hslColor;
 
 }
 
@@ -205,9 +202,18 @@ function addMarkerToMap(latitude, longitude) {
     //if ((latitude != 0) && (longitude != 0))
     {
         var latlng = new google.maps.LatLng(latitude, longitude);
+
         var opts = {
             map: adMapper.map,
-            position: latlng
+            position: latlng,
+            icon : { path: google.maps.SymbolPath.CIRCLE,
+                fillColor: adMapper.markers[adMapper.adNumber].color,
+                fillOpacity: 0.5,
+                strokeColor: adMapper.markers[adMapper.adNumber].color,
+                strokeOpacity: 0.5,
+                strokeWeight: 1,
+                scale: 5
+            }
         }
         var marker = new google.maps.Marker(opts);
         console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
