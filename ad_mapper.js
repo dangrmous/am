@@ -100,6 +100,7 @@ function queryForAds() {
 
 
 function createAdList(results) {
+    $("span#adListLabel").css("visibility", "");
     adMapper.fbAdList = new Array();
     console.log('createAdList results:');
     console.dir(results);
