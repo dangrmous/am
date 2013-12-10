@@ -8,6 +8,7 @@
 
 adMapper.markers = [];
 
+
 function makeApiCall() {
     queryAccounts();
 }
@@ -104,9 +105,10 @@ function createAdList(results) {
     console.dir(results);
     for (ad in results.rows) {
         adMapper.markers[results.rows[ad][0]] = [];
+        adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
-            + results.rows[ad][0] + '">' + results.rows[ad][0] + '</label><br>');
+            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: #' + adMapper.markers[results.rows[ad][0]].color +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
 
         $("#" + results.rows[ad][0]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
@@ -119,6 +121,18 @@ function createAdList(results) {
     }
 
     console.log('fbAdList is: ' + adMapper.fbAdList);
+
+}
+
+function getAColor(index){
+    //Returns a hex color value starting at #D2D2FF and getting more saturated based on index
+    r = 230 - (25 * index);
+    g = 230 - (25 * index);
+    b = 255;
+    var hexColor = new String;
+    hexColor = r.toString(16) + g.toString(16) + b.toString(16);
+    console.log("Index was: " + index + " and color string is: " + hexColor);
+    return hexColor;
 
 }
 
