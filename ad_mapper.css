@@ -5,25 +5,35 @@ body {
 }
 
 #main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
     padding: 0px;
+    padding-left: 10px;
     border: 0px;
     background-color: gray;
-    height: 100%;
+    height: 570px;
     width: 20%;
     text-align: left;
     font-family: helvetica;
     font-size: 14px;
-    float: left;
     display: inline-block;
     overflow: hidden;
-
+    border: solid 5px white;
+    border-radius: 5px;
+    opacity: 0.9;
 }
 
 #map_canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
     padding: 0px;
     border: 0px;
     height: 100%;
-    width: 80%;
+    width: 100%;
     float: right;
     display: inline-block;
 
