@@ -56,7 +56,7 @@ function handleAuthorized() {
     getAdListButton.style.visibility = '';
     authorizeButton.style.visibility = 'hidden';
 
-    // When the 'Get Visits' button is clicked, call the makeApiCall function
+    // When the 'Get FB Ads' button is clicked, call the makeApiCall function
     getAdListButton.onclick = queryForAds;
 
 }
