@@ -11,9 +11,10 @@ adMapper.colors = [];
 adMapper.markerAdded = new Array();
 
 var currentDate = new Date();
-
-currentDate.formatted = currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate();
-//console.log("currentDate.formatted = " + currentDate.formatted);
+var currentMonth = (((currentDate.getMonth() + 1) < 10) ? "0" : "") + (currentDate.getMonth() + 1); //This formats the month with a leading zero if needed, require for GA
+var currentDay = (((currentDate.getDate()) < 10) ? "0" : "") + currentDate.getDate();
+currentDate.formatted = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay;
+console.log("currentDate.formatted = " + currentDate.formatted);
 
 function makeApiCall() {
     queryAccounts();
@@ -89,21 +90,21 @@ function queryProfiles(accountId, webpropertyId) {
 }
 
 function handleProfiles(results) {
-  if (!results.code) {
-    if (results && results.items && results.items.length) {
+    if (!results.code) {
+        if (results && results.items && results.items.length) {
 
-      // Get the first View (Profile) ID
-      var firstProfileId = results.items[0].id;
+            // Get the first View (Profile) ID
+            var firstProfileId = results.items[0].id;
 
-      // Step 3. Query the Core Reporting API
-        getAdViewLocations(adMapper.gaProfile);
+            // Step 3. Query the Core Reporting API
+            getAdViewLocations(adMapper.gaProfile);
 
+        } else {
+            console.log('No views (profiles) found for this user.');
+        }
     } else {
-      console.log('No views (profiles) found for this user.');
+        console.log('There was an error querying views (profiles): ' + results.message);
     }
-  } else {
-    console.log('There was an error querying views (profiles): ' + results.message);
-  }
 }
 
 function queryForAds() {
@@ -136,7 +137,7 @@ function createAdList(results) {
         //adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
         adMapper.fbAdList.push(results.rows[ad][0]);
         $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
-            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.colors[results.rows[ad][0]] +';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
+            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.colors[results.rows[ad][0]] + ';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
 
         $("#" + results.rows[ad][0]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
@@ -150,7 +151,7 @@ function createAdList(results) {
 
 }
 
-function getAColor(index){
+function getAColor(index) {
     //Returns a hex color value starting at #D2D2FF and getting more saturated based on index
     h = 15 * index;
     var hslColor = new String;
@@ -234,7 +235,7 @@ function addMarkerToMap(latitude, longitude) {
         var opts = {
             map: adMapper.map,
             position: latlng,
-            icon : { path: google.maps.SymbolPath.CIRCLE,
+            icon: { path: google.maps.SymbolPath.CIRCLE,
                 fillColor: adMapper.colors[adMapper.adNumber],
                 fillOpacity: 1,
                 strokeColor: "grey",
@@ -267,12 +268,12 @@ function removeMarker(adNumber) {
     adMapper.markers[adNumber] = [];
 }
 
-function removeAllMarkers(){
+function removeAllMarkers() {
     //console.log("removeAllMarkers called. adMapper.markerAdded is: ");
     //console.dir(adMapper.markerAdded);
-    for (i=0; i < adMapper.markerAdded.length; i++){
+    for (i = 0; i < adMapper.markerAdded.length; i++) {
 
-            removeMarker(adMapper.markerAdded[i]);
+        removeMarker(adMapper.markerAdded[i]);
 
     }
 }
