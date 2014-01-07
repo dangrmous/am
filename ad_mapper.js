@@ -16,99 +16,7 @@ var currentDay = (((currentDate.getDate()) < 10) ? "0" : "") + currentDate.getDa
 currentDate.formatted = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay;
 console.log("currentDate.formatted = " + currentDate.formatted);
 
-function makeApiCall() {
-    queryAccounts();
-}
-
-function queryAccounts() {
-    //console.log('Querying Accounts.');
-
-    // Get a list of all Google Analytics accounts for this user
-    gapi.client.analytics.management.accounts.list().execute(handleAccounts);
-}
-
-function handleAccounts(results) {
-    if (!results.code) {
-        if (results && results.items && results.items.length) {
-
-            // Get the first Google Analytics account
-            var firstAccountId = results.items[0].id;
-
-            // Query for Web Properties
-            queryWebproperties(firstAccountId);
-
-        } else {
-            //console.log('No accounts found for this user.')
-        }
-    } else {
-        //console.log('There was an error querying accounts: ' + results.message);
-    }
-}
-
-function queryWebproperties(accountId) {
-    //console.log('Querying Webproperties.');
-
-    // Get a list of all the Web Properties for the account
-    gapi.client.analytics.management.webproperties.list({'accountId': accountId}).execute(handleWebproperties);
-}
-
-function handleWebproperties(results) {
-    if (!results.code) {
-        if (results && results.items && results.items.length) {
-            //console.log("results length is: " + results.items.length);
-
-
-            //console.log('Result of web properties query: ');
-            //console.dir(results);
-
-
-            // Get the first Google Analytics account
-            var firstAccountId = results.items[0].accountId;
-
-            // Get the first Web Property ID
-            var firstWebpropertyId = results.items[0].id;
-
-            // Query for Views (Profiles)
-            queryProfiles(firstAccountId, firstWebpropertyId);
-
-        } else {
-            //console.log('No webproperties found for this user.');
-        }
-    } else {
-        //console.log('There was an error querying webproperties: ' + results.message);
-    }
-}
-
-function queryProfiles(accountId, webpropertyId) {
-    //console.log('Querying Views (Profiles).');
-
-    // Get a list of all Views (Profiles) for the first Web Property of the first Account
-    gapi.client.analytics.management.profiles.list({
-        'accountId': accountId,
-        'webPropertyId': webpropertyId
-    }).execute(handleProfiles);
-}
-
-function handleProfiles(results) {
-    if (!results.code) {
-        if (results && results.items && results.items.length) {
-
-            // Get the first View (Profile) ID
-            var firstProfileId = results.items[0].id;
-
-            // Step 3. Query the Core Reporting API
-            getAdViewLocations(adMapper.gaProfile);
-
-        } else {
-            console.log('No views (profiles) found for this user.');
-        }
-    } else {
-        console.log('There was an error querying views (profiles): ' + results.message);
-    }
-}
-
 function queryForAds() {
-    facebookAdId = $("#ad-id").val();
 
     profile = $("#profile-id").val();
     adMapper.gaProfile = 'ga:' + profile;
@@ -122,7 +30,6 @@ function queryForAds() {
         'filters': 'ga:medium=~[0-9]'
     }).execute(createAdList);
 }
-
 
 function createAdList(results) {
     removeAllMarkers();
@@ -148,7 +55,6 @@ function createAdList(results) {
     }
 
     //console.log('fbAdList is: ' + adMapper.fbAdList);
-
 }
 
 function getAColor(index) {
@@ -163,7 +69,7 @@ function getAColor(index) {
 
 function handleAdClick() {
     if ($("input#" + adMapper.adNumber + ":checked").val()) {
-        makeApiCall();
+        getAdViewLocations(adMapper.gaProfile);
     }
 
     else {
@@ -189,18 +95,10 @@ function getAdViewLocations(profileId) {
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:latitude,ga:longitude',
         'filters': adMapper.adFilters
-    }).execute(handleCoreReportingResults);
+    }).execute(displayViewsOnMap);
 }
 
-function handleCoreReportingResults(results) {
-    if (results.error) {
-        console.log('There was an error querying core reporting API: ' + results.message);
-    } else {
-        printResults(results);
-    }
-}
-
-function printResults(results) {
+function displayViewsOnMap(results) {
     if (results.rows && results.rows.length) {
         //console.dir(results);
         //console.log('View (Profile) Name: ', results.profileInfo.profileName);

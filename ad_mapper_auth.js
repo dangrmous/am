@@ -47,12 +47,12 @@ function handleAuthorized() {
     var authorizeButton = document.getElementById('authorize-button');
     var adIdDiv = document.getElementById('ad-id-div');
     var profileIdDiv = document.getElementById('profile-id-div');
-    var adListDiv = document.getElementById('ad-list-div');
+    var adList = document.getElementById('ad-list');
     var getAdListButton = document.getElementById('get-ad-list');
 
     // Show the 'Get Visits' button and hide the 'Authorize' button;
     profileIdDiv.style.visibility = '';
-    adListDiv.style.visibility = '';
+    adList.style.visibility = '';
     getAdListButton.style.visibility = '';
     authorizeButton.style.visibility = 'hidden';
 
