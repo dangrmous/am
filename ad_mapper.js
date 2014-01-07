@@ -60,7 +60,7 @@ function createDotAdList(results) {
 
 function createHeatmapAdList(){
     for(ad in adMapper.fbAdList){
-
+        //TODO maybe this should just go in the function above, make it a createAdLists or something
     }
 
 }
