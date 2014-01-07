@@ -51,7 +51,7 @@ function handleAuthorized() {
 
     // Show the 'Get Visits' button and hide the 'Authorize' button;
     profileIdDiv.style.visibility = '';
-    adList.style.visibility = '';
+    adList.style.display = 'none';
     getAdListButton.style.visibility = '';
     authorizeButton.style.visibility = 'hidden';
 

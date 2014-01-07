@@ -28,30 +28,45 @@ function queryForAds() {
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:medium',
         'filters': 'ga:medium=~[0-9]'
-    }).execute(createDotAdList);
+    }).execute(createAdArray);
 }
 
-function createDotAdList(results) {
+function createAdArray(results){ //creates an array of FB ad ID's
+    adMapper.fbAdList = [];
+    for (ad in results.rows){
+        adMapper.fbAdList.push(results.rows[ad][0]);
+    }
+    createAdLists();
+}
+
+function createAdLists() {
     $("#map-type-radio").show();
+    $("#heatmap").click(showHeatMap());
     removeAllMarkers();
     $("#ad-list").empty();
+    $("#ad-list-heatmap").empty();
     $("span#adListLabel").css("visibility", "");
-    adMapper.fbAdList = new Array();
-    //console.log('createDotAdList results:');
+    //adMapper.fbAdList = new Array();
+    //console.log('createAdLists results:');
     //console.dir(results);
-    for (ad in results.rows) {
-        adMapper.colors[results.rows[ad][0]] = getAColor(ad);
-        adMapper.markers[results.rows[ad][0]] = [];
+    for (ad in adMapper.fbAdList) {
+        adMapper.colors[adMapper.fbAdList[ad]] = getAColor(ad);
+        adMapper.markers[adMapper.fbAdList[ad]] = [];
         //adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
-        adMapper.fbAdList.push(results.rows[ad][0]);
-        $("#ad-list").append('<label for="' + results.rows[ad][0] + '"> <input id="' + results.rows[ad][0] + '" type="checkbox" name="'
-            + results.rows[ad][0] + '">' + results.rows[ad][0] + '<span style="background-color: ' + adMapper.colors[results.rows[ad][0]] + ';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
+        //adMapper.fbAdList.push(results.rows[ad][0]);
+        $("#ad-list").append('<label for="' + adMapper.fbAdList[ad] + '"> <input id="' + adMapper.fbAdList[ad] + '" type="checkbox" name="'
+            + adMapper.fbAdList[ad] + '">' + adMapper.fbAdList[ad] + '<span style="background-color: ' + adMapper.colors[adMapper.fbAdList[ad]] + ';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
 
-        $("#" + results.rows[ad][0]).click(function () {
+        $("#" + adMapper.fbAdList[ad]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
             adMapper.adNumber = this.id;
             handleAdClick();
         });
+
+        //Build the radio button list for heatmap ads
+
+        $("#ad-list-heatmap").append('<input id="' + adMapper.fbAdList[ad] + '-heatmap" type="radio" name="heatmap-radio" value="' + adMapper.fbAdList[ad] + '-heatmap">'
+        + adMapper.fbAdList[ad] + '<br>');
 
     }
 
@@ -119,6 +134,11 @@ function displayViewsOnMap(results) {
     } else {
         console.log('No results found');
     }
+}
+
+function showHeatMap(){
+    $("#ad-list").hide();
+    $("#heatmap-ad-list").show();
 }
 
 function createMap() {
