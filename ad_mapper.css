@@ -82,3 +82,12 @@ h2.admin {
 #ad-list{
     overflow: scroll;
 }
+
+#ad-list-heatmap{
+    overflow: scroll;
+    display: none;
+}
+
+#map-type-radio{
+    display: none;
+}

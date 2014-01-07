@@ -45,7 +45,6 @@ function handleAuthResult(authResult) {
 // Authorized user
 function handleAuthorized() {
     var authorizeButton = document.getElementById('authorize-button');
-    var adIdDiv = document.getElementById('ad-id-div');
     var profileIdDiv = document.getElementById('profile-id-div');
     var adList = document.getElementById('ad-list');
     var getAdListButton = document.getElementById('get-ad-list');

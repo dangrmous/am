@@ -28,15 +28,16 @@ function queryForAds() {
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:medium',
         'filters': 'ga:medium=~[0-9]'
-    }).execute(createAdList);
+    }).execute(createDotAdList);
 }
 
-function createAdList(results) {
+function createDotAdList(results) {
+    $("#map-type-radio").show();
     removeAllMarkers();
     $("#ad-list").empty();
     $("span#adListLabel").css("visibility", "");
     adMapper.fbAdList = new Array();
-    //console.log('createAdList results:');
+    //console.log('createDotAdList results:');
     //console.dir(results);
     for (ad in results.rows) {
         adMapper.colors[results.rows[ad][0]] = getAColor(ad);
@@ -55,6 +56,13 @@ function createAdList(results) {
     }
 
     //console.log('fbAdList is: ' + adMapper.fbAdList);
+}
+
+function createHeatmapAdList(){
+    for(ad in adMapper.fbAdList){
+
+    }
+
 }
 
 function getAColor(index) {
