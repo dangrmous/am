@@ -9,8 +9,8 @@
 var adMapper = {};
 
 
-adMapper.clientId = '801313133290-ub79e00uthqes3c5p3fkmr6cjlpo9c38.apps.googleusercontent.com';
-adMapper.apiKey = 'AIzaSyDHs3a906p2WBdQK_1W7dm6MVVzF409OZw';
+adMapper.clientId = clientId;
+adMapper.apiKey = apiKey;
 adMapper.scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 
 // This function is called after the Client Library has finished loading
