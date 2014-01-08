@@ -31,9 +31,9 @@ function queryForAds() {
     }).execute(createAdArray);
 }
 
-function createAdArray(results){ //creates an array of FB ad ID's
+function createAdArray(results) { //creates an array of FB ad ID's
     adMapper.fbAdList = [];
-    for (ad in results.rows){
+    for (ad in results.rows) {
         adMapper.fbAdList.push(results.rows[ad][0]);
     }
     //console.log('fbAdList is: ' + adMapper.fbAdList);
@@ -42,10 +42,10 @@ function createAdArray(results){ //creates an array of FB ad ID's
 
 function createAdLists() {
     $("#map-type-radio").show();
-    $("#heatmap").click(function(){
+    $("#heatmap").click(function () {
         showHeatmapAdList();
     });
-    $("#dots").click(function(){
+    $("#dots").click(function () {
         showDotsAdList();
     });
     removeAllMarkers();
@@ -72,8 +72,8 @@ function createAdLists() {
         //Build the radio button list for heatmap ads
 
         $("#ad-list-heatmap").append('<input id="' + adMapper.fbAdList[ad] + '-heatmap" type="radio" name="heatmap-radio" value="' + adMapper.fbAdList[ad] + '">'
-        + adMapper.fbAdList[ad] + '<br>');
-        $("#" + adMapper.fbAdList[ad] + '-heatmap').click(function(){
+            + adMapper.fbAdList[ad] + '<br>');
+        $("#" + adMapper.fbAdList[ad] + '-heatmap').click(function () {
             adMapper.adFilters = 'ga:medium==' + this.value;
             adMapper.adNumber = this.value;
             handleHeatmapAdClick();
@@ -99,7 +99,7 @@ function handleDotAdClick() {
     if ($("input#" + adMapper.adNumber + ":checked").val()) {
         var deferred = $.Deferred();
         getAdViewLocations(adMapper.gaProfile, deferred);
-        deferred.done(function(results){
+        deferred.done(function (results) {
 
             handleAdViewLocations(results);
             displayViewsOnMap();
@@ -112,21 +112,22 @@ function handleDotAdClick() {
     }
 }
 
-function handleHeatmapAdClick(){
+function handleHeatmapAdClick() {
     var deferred = $.Deferred();
     getAdViewLocations(adMapper.gaProfile, deferred);
-    deferred.done(function(results){
+    deferred.done(function (results) {
         handleAdViewLocations(results);
         displayViewsOnHeatmap();
     });
 }
 
-function displayViewsOnHeatmap(){
+function displayViewsOnHeatmap() {
+    removeHeatmap();
     var heatMapArray = [];
 
-    for(rownumber in adMapper.adViews.rows){
+    for (rownumber in adMapper.adViews.rows) {
 
-        heatMapArray.push(new google.maps.LatLng(adMapper.adViews.rows[rownumber][0],adMapper.adViews.rows[rownumber][1]));
+        heatMapArray.push(new google.maps.LatLng(adMapper.adViews.rows[rownumber][0], adMapper.adViews.rows[rownumber][1]));
     }
 
     adMapper.heatmap = new google.maps.visualization.HeatmapLayer(
@@ -135,8 +136,8 @@ function displayViewsOnHeatmap(){
         }
     );
 
+    adMapper.heatmap.set('radius', 20);
     adMapper.heatmap.setMap(adMapper.map);
-
 
 
 }
@@ -150,14 +151,14 @@ function getAdViewLocations(profileId, deferred) {
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:latitude,ga:longitude',
         'filters': adMapper.adFilters
-    }).execute(function(results){
+    }).execute(function (results) {
 
             deferred.resolve(results);
         });
 
 }
 
-function handleAdViewLocations(results){
+function handleAdViewLocations(results) {
 
     adMapper.adViews = results;
 
@@ -179,14 +180,14 @@ function displayViewsOnMap() {
     }
 }
 
-function showHeatmapAdList(){
+function showHeatmapAdList() {
     console.log("showHeatmapAdList called");
     removeAllMarkers();
     $("#ad-list").hide();
     $("#ad-list-heatmap").show();
 }
 
-function showDotsAdList(){
+function showDotsAdList() {
     removeHeatmap();
     $("#ad-list-heatmap").hide();
     $("#ad-list").show();
@@ -256,6 +257,8 @@ function removeAllMarkers() {
     }
 }
 
-function removeHeatmap(){
-    adMapper.heatmap.setMap(null);
+function removeHeatmap() {
+    if (adMapper.heatmap) {
+        adMapper.heatmap.setMap(null);
+    }
 }
