@@ -136,7 +136,7 @@ function displayViewsOnHeatmap() {
         }
     );
 
-    adMapper.heatmap.set('radius', 20);
+    adMapper.heatmap.set('radius', 25);
     adMapper.heatmap.setMap(adMapper.map);
 
 
@@ -183,12 +183,14 @@ function displayViewsOnMap() {
 function showHeatmapAdList() {
     console.log("showHeatmapAdList called");
     removeAllMarkers();
+    $("#ad-list :checkbox").prop('checked', false);
     $("#ad-list").hide();
     $("#ad-list-heatmap").show();
 }
 
 function showDotsAdList() {
     removeHeatmap();
+    $("#ad-list-heatmap :radio").prop('checked',false);
     $("#ad-list-heatmap").hide();
     $("#ad-list").show();
 }
