@@ -36,12 +36,18 @@ function createAdArray(results){ //creates an array of FB ad ID's
     for (ad in results.rows){
         adMapper.fbAdList.push(results.rows[ad][0]);
     }
+    //console.log('fbAdList is: ' + adMapper.fbAdList);
     createAdLists();
 }
 
 function createAdLists() {
     $("#map-type-radio").show();
-    $("#heatmap").click(showHeatMap());
+    $("#heatmap").click(function(){
+        showHeatMap();
+    });
+    $("#dots").click(function(){
+        showDotsMap();
+    });
     removeAllMarkers();
     $("#ad-list").empty();
     $("#ad-list-heatmap").empty();
@@ -60,25 +66,24 @@ function createAdLists() {
         $("#" + adMapper.fbAdList[ad]).click(function () {
             adMapper.adFilters = 'ga:medium==' + this.id;
             adMapper.adNumber = this.id;
-            handleAdClick();
+            handleDotAdClick();
         });
 
         //Build the radio button list for heatmap ads
 
-        $("#ad-list-heatmap").append('<input id="' + adMapper.fbAdList[ad] + '-heatmap" type="radio" name="heatmap-radio" value="' + adMapper.fbAdList[ad] + '-heatmap">'
+        $("#ad-list-heatmap").append('<input id="' + adMapper.fbAdList[ad] + '-heatmap" type="radio" name="heatmap-radio" value="' + adMapper.fbAdList[ad] + '">'
         + adMapper.fbAdList[ad] + '<br>');
+        $("#" + adMapper.fbAdList[ad] + '-heatmap').click(function(){
+            adMapper.adFilters = 'ga:medium==' + this.value;
+            adMapper.adNumber = this.value;
+            handleHeatmapAdClick();
+        })
 
     }
 
-    //console.log('fbAdList is: ' + adMapper.fbAdList);
-}
-
-function createHeatmapAdList(){
-    for(ad in adMapper.fbAdList){
-        //TODO maybe this should just go in the function above, make it a createAdLists or something
-    }
 
 }
+
 
 function getAColor(index) {
     //Returns a hex color value starting at #D2D2FF and getting more saturated based on index
@@ -90,9 +95,10 @@ function getAColor(index) {
 
 }
 
-function handleAdClick() {
+function handleDotAdClick() {
     if ($("input#" + adMapper.adNumber + ":checked").val()) {
         getAdViewLocations(adMapper.gaProfile);
+
     }
 
     else {
@@ -100,34 +106,41 @@ function handleAdClick() {
     }
 }
 
+function handleHeatmapAdClick(){
+
+}
+
 function getAdViewLocations(profileId) {
-    //console.log("getAdViewLocations called");
-    //console.log("adMapper.adFilters is: " + adMapper.adFilters);
-    //console.log('profileId in getAdViewLocations ' + profileId);
 
-
-    //console.log('Querying Core Reporting API. Profile ID is: ' + profileId);
-    //console.log('adMapper.adFilters is: ');
-    //console.dir (adMapper.adFilters);
-
-    // Use the Analytics Service Object to query the Core Reporting API
-    gapi.client.analytics.data.ga.get({
+    adMapper.test = gapi.client.analytics.data.ga.get({
         'ids': profileId,
         'start-date': '2013-11-11',
         'end-date': currentDate.formatted,
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:latitude,ga:longitude',
         'filters': adMapper.adFilters
-    }).execute(displayViewsOnMap);
+    }).execute(handleAdViewLocations);
+
 }
 
-function displayViewsOnMap(results) {
-    if (results.rows && results.rows.length) {
+function handleAdViewLocations(results){
+    console.log("adMapper.test is:");
+    console.dir(adMapper.test);
+    adMapper.adViews = results;
+    console.log("adMapper.adViews is:");
+    console.dir(adMapper.adViews);
+    console.dir("adMapper.adViews is: " + adMapper.adViews);
+    displayViewsOnMap();
+}
+
+function displayViewsOnMap() {
+    console.log("displayViewsOnMap called");
+    if (adMapper.adViews.rows && adMapper.adViews.rows.length) {
         //console.dir(results);
         //console.log('View (Profile) Name: ', results.profileInfo.profileName);
-        for (rownumber in results.rows) {
+        for (rownumber in adMapper.adViews.rows) {
             //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
-            addMarkerToMap(results.rows[rownumber][0], results.rows[rownumber][1]);
+            addMarkerToMap(adMapper.adViews.rows[rownumber][0], adMapper.adViews.rows[rownumber][1]);
 
         }
 
@@ -137,8 +150,15 @@ function displayViewsOnMap(results) {
 }
 
 function showHeatMap(){
+    console.log("showHeatMap called");
+    removeAllMarkers();
     $("#ad-list").hide();
-    $("#heatmap-ad-list").show();
+    $("#ad-list-heatmap").show();
+}
+
+function showDotsMap(){
+    $("#ad-list-heatmap").hide();
+    $("#ad-list").show();
 }
 
 function createMap() {
