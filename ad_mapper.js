@@ -97,7 +97,13 @@ function getAColor(index) {
 
 function handleDotAdClick() {
     if ($("input#" + adMapper.adNumber + ":checked").val()) {
-        getAdViewLocations(adMapper.gaProfile);
+        var deferred = $.Deferred();
+        getAdViewLocations(adMapper.gaProfile, deferred);
+        deferred.done(function(results){
+
+            handleAdViewLocations(results);
+            displayViewsOnMap();
+        });
 
     }
 
@@ -110,27 +116,26 @@ function handleHeatmapAdClick(){
 
 }
 
-function getAdViewLocations(profileId) {
+function getAdViewLocations(profileId, deferred) {
 
-    adMapper.test = gapi.client.analytics.data.ga.get({
+    gapi.client.analytics.data.ga.get({
         'ids': profileId,
         'start-date': '2013-11-11',
         'end-date': currentDate.formatted,
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:latitude,ga:longitude',
         'filters': adMapper.adFilters
-    }).execute(handleAdViewLocations);
+    }).execute(function(results){
+
+            deferred.resolve(results);
+        });
 
 }
 
 function handleAdViewLocations(results){
-    console.log("adMapper.test is:");
-    console.dir(adMapper.test);
+
     adMapper.adViews = results;
-    console.log("adMapper.adViews is:");
-    console.dir(adMapper.adViews);
-    console.dir("adMapper.adViews is: " + adMapper.adViews);
-    displayViewsOnMap();
+
 }
 
 function displayViewsOnMap() {
