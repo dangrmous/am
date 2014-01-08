@@ -43,10 +43,10 @@ function createAdArray(results){ //creates an array of FB ad ID's
 function createAdLists() {
     $("#map-type-radio").show();
     $("#heatmap").click(function(){
-        showHeatMap();
+        showHeatmapAdList();
     });
     $("#dots").click(function(){
-        showDotsMap();
+        showDotsAdList();
     });
     removeAllMarkers();
     $("#ad-list").empty();
@@ -113,6 +113,31 @@ function handleDotAdClick() {
 }
 
 function handleHeatmapAdClick(){
+    var deferred = $.Deferred();
+    getAdViewLocations(adMapper.gaProfile, deferred);
+    deferred.done(function(results){
+        handleAdViewLocations(results);
+        displayViewsOnHeatmap();
+    });
+}
+
+function displayViewsOnHeatmap(){
+    var heatMapArray = [];
+
+    for(rownumber in adMapper.adViews.rows){
+
+        heatMapArray.push(new google.maps.LatLng(adMapper.adViews.rows[rownumber][0],adMapper.adViews.rows[rownumber][1]));
+    }
+
+    adMapper.heatmap = new google.maps.visualization.HeatmapLayer(
+        {
+            data: heatMapArray
+        }
+    );
+
+    adMapper.heatmap.setMap(adMapper.map);
+
+
 
 }
 
@@ -154,14 +179,15 @@ function displayViewsOnMap() {
     }
 }
 
-function showHeatMap(){
-    console.log("showHeatMap called");
+function showHeatmapAdList(){
+    console.log("showHeatmapAdList called");
     removeAllMarkers();
     $("#ad-list").hide();
     $("#ad-list-heatmap").show();
 }
 
-function showDotsMap(){
+function showDotsAdList(){
+    removeHeatmap();
     $("#ad-list-heatmap").hide();
     $("#ad-list").show();
 }
@@ -205,6 +231,7 @@ function addMarkerToMap(latitude, longitude) {
     }
 }
 
+
 function removeMarker(adNumber) {
     //console.log("removeMarker called with adNumber value: " + adNumber);
     //console.log("Value of adMapper.markers is: ");
@@ -227,4 +254,8 @@ function removeAllMarkers() {
         removeMarker(adMapper.markerAdded[i]);
 
     }
+}
+
+function removeHeatmap(){
+    adMapper.heatmap.setMap(null);
 }
