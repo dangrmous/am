@@ -25,6 +25,13 @@ body {
     opacity: 1;
 }
 
+#logo {
+padding-top: 20;
+color: black;
+font-family: Helvetica;
+font-size: 250%;
+}
+
 #map_canvas{
     position: absolute;
     top: 0;
