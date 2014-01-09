@@ -23,7 +23,7 @@ function queryForAds() {
     //console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
     gapi.client.analytics.data.ga.get({
         'ids': adMapper.gaProfile,
-        'start-date': '2013-11-11',
+        'start-date': '2013-07-01',
         'end-date': currentDate.formatted,
         'metrics': 'ga:pageviews',
         'dimensions': 'ga:medium',
