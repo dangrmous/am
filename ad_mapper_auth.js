@@ -16,16 +16,14 @@ adMapper.scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 // This function is called after the Client Library has finished loading
 function handleClientLoad() {
 
-    // 1. Set the API Key
     gapi.client.setApiKey(adMapper.apiKey);
 
-    // 2. Call the function that checks if the user is Authenticated. This is defined in the next section
+
     window.setTimeout(checkAuth, 1);
 }
 
 function checkAuth() {
-    // Call the Google Accounts Service to determine the current user's auth status.
-    // Pass the response to the handleAuthResult callback function
+
     gapi.auth.authorize({client_id: adMapper.clientId, scope: adMapper.scopes, immediate: true}, handleAuthResult);
 }
 
@@ -51,7 +49,7 @@ function handleAuthorized() {
 
     // Show the 'Get Visits' button and hide the 'Authorize' button;
     profileIdDiv.style.visibility = '';
-    //adList.style.display = '';
+
     getAdListButton.style.visibility = '';
     authorizeButton.style.visibility = 'hidden';
 
