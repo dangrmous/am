@@ -14,13 +14,13 @@ var currentDate = new Date();
 var currentMonth = (((currentDate.getMonth() + 1) < 10) ? "0" : "") + (currentDate.getMonth() + 1); //This formats the month with a leading zero if needed, require for GA
 var currentDay = (((currentDate.getDate()) < 10) ? "0" : "") + currentDate.getDate();
 currentDate.formatted = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay;
-console.log("currentDate.formatted = " + currentDate.formatted);
+
 
 function queryForAds() {
 
     profile = $("#profile-id").val();
     adMapper.gaProfile = 'ga:' + profile;
-    //console.log('queryForAds has profile id value: ' + adMapper.gaProfile);
+
     gapi.client.analytics.data.ga.get({
         'ids': adMapper.gaProfile,
         'start-date': '2013-07-01',
@@ -36,7 +36,7 @@ function createAdArray(results) { //creates an array of FB ad ID's
     for (ad in results.rows) {
         adMapper.fbAdList.push(results.rows[ad][0]);
     }
-    //console.log('fbAdList is: ' + adMapper.fbAdList);
+
     createAdLists();
 }
 
@@ -52,14 +52,11 @@ function createAdLists() {
     $("#ad-list").empty();
     $("#ad-list-heatmap").empty();
     $("span#adListLabel").css("visibility", "");
-    //adMapper.fbAdList = new Array();
-    //console.log('createAdLists results:');
-    //console.dir(results);
+
     for (ad in adMapper.fbAdList) {
         adMapper.colors[adMapper.fbAdList[ad]] = getAColor(ad);
         adMapper.markers[adMapper.fbAdList[ad]] = [];
-        //adMapper.markers[results.rows[ad][0]].color = getAColor(ad);
-        //adMapper.fbAdList.push(results.rows[ad][0]);
+
         $("#ad-list").append('<label for="' + adMapper.fbAdList[ad] + '"> <input id="' + adMapper.fbAdList[ad] + '" type="checkbox" name="'
             + adMapper.fbAdList[ad] + '">' + adMapper.fbAdList[ad] + '<span style="background-color: ' + adMapper.colors[adMapper.fbAdList[ad]] + ';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><br>');
 
@@ -90,7 +87,7 @@ function getAColor(index) {
     h = 15 * index;
     var hslColor = new String;
     hslColor = "hsl(" + h + ",100%,50%)";
-    //console.log("Index was: " + index + " and color string is: " + hslColor);
+
     return hslColor;
 
 }
@@ -165,12 +162,11 @@ function handleAdViewLocations(results) {
 }
 
 function displayViewsOnMap() {
-    console.log("displayViewsOnMap called");
+
     if (adMapper.adViews.rows && adMapper.adViews.rows.length) {
-        //console.dir(results);
-        //console.log('View (Profile) Name: ', results.profileInfo.profileName);
+
         for (rownumber in adMapper.adViews.rows) {
-            //console.log('Latitude: ' + results.rows[rownumber][0] + ' Longitude: ' + results.rows[rownumber][1]);
+
             addMarkerToMap(adMapper.adViews.rows[rownumber][0], adMapper.adViews.rows[rownumber][1]);
 
         }
@@ -181,7 +177,7 @@ function displayViewsOnMap() {
 }
 
 function showHeatmapAdList() {
-    console.log("showHeatmapAdList called");
+
     removeAllMarkers();
     $("#ad-list :checkbox").prop('checked', false);
     $("#ad-list").hide();
@@ -207,8 +203,7 @@ function createMap() {
 }
 
 function addMarkerToMap(latitude, longitude) {
-    //console.log("addMarkerToMap called");
-    //if ((latitude != 0) && (longitude != 0))
+
     {
         var latlng = new google.maps.LatLng(latitude, longitude);
 
@@ -225,20 +220,16 @@ function addMarkerToMap(latitude, longitude) {
             }
         }
         var marker = new google.maps.Marker(opts);
-        //console.log("addMarkerToMap called. Value of adMapper.adNumber is: " + adMapper.adNumber);
 
         adMapper.markers[adMapper.adNumber].push(marker);
         adMapper.markerAdded.push(adMapper.adNumber);
-        //console.log("adMapper.markers[adMapper.adNumber is: ]");
-        //console.dir(adMapper.markers[adMapper.adNumber]);
+
     }
 }
 
 
 function removeMarker(adNumber) {
-    //console.log("removeMarker called with adNumber value: " + adNumber);
-    //console.log("Value of adMapper.markers is: ");
-    //console.dir(adMapper.markers);
+
     if (adMapper.markers[adNumber].length) {
         for (var i = 0; i < adMapper.markers[adNumber].length; i++) {
 
@@ -250,8 +241,7 @@ function removeMarker(adNumber) {
 }
 
 function removeAllMarkers() {
-    //console.log("removeAllMarkers called. adMapper.markerAdded is: ");
-    //console.dir(adMapper.markerAdded);
+
     for (i = 0; i < adMapper.markerAdded.length; i++) {
 
         removeMarker(adMapper.markerAdded[i]);
