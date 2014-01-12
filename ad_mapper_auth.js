@@ -17,7 +17,7 @@ adMapper.scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 function handleClientLoad() {
 
     gapi.client.setApiKey(adMapper.apiKey);
-
+    $("#get-ad-list").removeAttr("disabled");
 
     window.setTimeout(checkAuth, 1);
 }
